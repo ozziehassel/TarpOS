@@ -1,0 +1,9 @@
+body{
+    margin: 0;
+}
+.taskbar{
+    display: block;
+    background-color: lightgray;
+    height: 20px;
+    width: 100%;
+}
