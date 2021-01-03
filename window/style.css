@@ -1,9 +1,15 @@
 body{
     margin: 0;
 }
-.taskbar{
-    display: block;
-    background-color: lightgray;
-    height: 20px;
+.desktop{
+    background-color: #121212;
+    height: 93vh;
     width: 100%;
+}   
+.taskbar{
+    position: absolute;
+    background-color: #3d3d3d;
+    height: 7vh;
+    width: 100%;
+    bottom: 0;
 }
