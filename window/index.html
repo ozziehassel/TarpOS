@@ -4,12 +4,16 @@
         <link rel='stylesheet' href='style.css'>
     </head>
     <body>
-        <div class='desktop'>
+        <div id='desktop'>
 
         </div>
-        <div class='taskbar'>
+        <div id='taskbar'>
             
         </div>
+        <script>if (typeof module === 'object'){window.module = module; module = undefined;}</script>
+        <script src='lib/jquery-3.5.1.min.js'></script>
+        <script src='lib/jquery-ui.min.js'></script>
         <script src='os.js'></script>
+        <script>if (window.module) module = window.module;</script>
     </body>
 </html>

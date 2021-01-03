@@ -1,12 +1,12 @@
 body{
     margin: 0;
 }
-.desktop{
+#desktop{
     background-color: #121212;
     height: 93vh;
     width: 100%;
 }   
-.taskbar{
+#taskbar{
     position: absolute;
     background-color: #3d3d3d;
     height: 7vh;
