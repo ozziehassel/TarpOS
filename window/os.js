@@ -2,6 +2,8 @@ const { BrowserWindow } = require('electron').remote;
 const fs = require('fs');
 var sys = {
  processes: [],
+ globalFont: 'arial',
+ availFonts: ['arial', 'helvetica', 'verdana', 'courier new', 'garamond'],
  taskbar: ['Files', 'Photos', 'Settings'],
  desktop: [],
  settings: {
@@ -14,9 +16,9 @@ function boot(){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
-        console.log('openPrgm("'+sys.taskbar[i]+'")');
         document.getElementById('taskbar').appendChild(pinIcon);
     }
+    document.body.style.fontFamily = sys.globalFont;
 }
 function openPrgm(name){
     var window = document.createElement('div');
@@ -24,18 +26,24 @@ function openPrgm(name){
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
-    window.innerHTML = '<span>'+name+'</span>'
+    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>'
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
     close.addEventListener('click', () => {
         closePrgm(name, window);
-    })
-    sys.processes.push(name);
+    });
+    var frame = document.createElement('div');
+    frame.id = name+'_frame';
+    frame.style.width = sys.settings.defaultWindowWidth + 'vw';
+    frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
+    frame.style.marginTop = '6px';
+    window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
         containment: "parent"
     });
+    sys.processes.push(name);
 }
 function closePrgm(name, window){
     window.style.display = 'none';
