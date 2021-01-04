@@ -51,4 +51,9 @@ function closePrgm(name, window){
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
 }
+function saveFile(name, dir, type, data){
+    fs.writeFile('.fs/'+dir+'/'+name+'.'+type, data, (err) => {
+        if(err) throw err;
+    })
+}
 boot();
