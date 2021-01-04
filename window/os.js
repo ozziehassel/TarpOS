@@ -4,7 +4,7 @@ var sys = {
  processes: [],
  globalFont: 'arial',
  availFonts: ['arial', 'helvetica', 'verdana', 'courier new', 'garamond'],
- taskbar: ['Files', 'Photos', 'Settings'],
+ taskbar: ['Files', 'TXT', 'Settings'],
  desktop: [],
  settings: {
      defaultWindowHeight: 60,
