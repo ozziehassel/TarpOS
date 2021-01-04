@@ -33,11 +33,12 @@ function openPrgm(name){
     close.addEventListener('click', () => {
         closePrgm(name, window);
     });
-    var frame = document.createElement('div');
+    var frame = document.createElement('iframe');
     frame.id = name+'_frame';
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
     frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
     frame.style.marginTop = '6px';
+    frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
