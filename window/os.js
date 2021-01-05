@@ -52,6 +52,7 @@ function closePrgm(name, window){
     window.style.display = 'none';
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
+    window.remove(); // stops running processes; will reduce lag
 }
 function saveFile(name, dir, type, data){
     fs.writeFile('.fs/'+dir+'/'+name+'.'+type, data, (err) => {
