@@ -20,6 +20,18 @@ function boot(){
         document.getElementById('taskbar').appendChild(pinIcon);
     }
     document.body.style.fontFamily = sys.globalFont;
+
+    // datetime display
+    datetime = document.createElement('div');
+    datetime.style.position = 'absolute';
+    datetime.style.top = '50%';
+    datetime.style.transform = 'translateY(-50%)';
+    datetime.style.right = 0;
+    datetime.style.paddingRight = '10px';
+    document.getElementById('taskbar').appendChild(datetime);
+    datetime.style.color = 'white';
+    datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' ');
+    setInterval(function() { datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' '); }, 1000);
 }
 function openPrgm(name){
     var window = document.createElement('div');
