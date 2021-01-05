@@ -26,7 +26,8 @@ function openPrgm(name){
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
-    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>'
+    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
+    window.style.backgroundColor = "#EEEEEE";
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
@@ -38,6 +39,7 @@ function openPrgm(name){
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
     frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
     frame.style.marginTop = '6px';
+    frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
