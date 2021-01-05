@@ -16,6 +16,7 @@ function boot(){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
+        pinIcon.src = './fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
     }
     document.body.style.fontFamily = sys.globalFont;
