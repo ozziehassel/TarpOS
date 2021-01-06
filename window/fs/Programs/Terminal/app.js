@@ -1,4 +1,5 @@
 document.body.style.margin = 0;
+document.body.style.backgroundColor = "#000000";
 document.getElementById("terminalpre").innerText += "Starting TARP terminal...";
 function typeBox() {
     document.getElementById("terminalpre").innerText += "\nTARP: ";
