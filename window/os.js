@@ -87,10 +87,8 @@ window.addEventListener('message', function(event) {
     } 
     else if (command.name == 'dir'){
         try {
-            fs.readdir(__dirname+'/fs/'+command.args[0], (err, files) => {
-                if(err) throw err;
-                appWindow.postMessage(files);
-            });
+            directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
+            appWindow.postMessage(directory_contents);
         } 
         catch(err) { appWindow.postMessage(err.message); }
     }
