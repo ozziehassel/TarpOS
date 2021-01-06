@@ -19,7 +19,6 @@ function typeBox() {
                 name: this.innerText.split(" ")[0],
                 args: this.innerText.split(" ").splice(1, this.innerText.split("").length - 2)
             });
-            setTimeout(typeBox, 500);
             return false;
         }
     }
@@ -27,4 +26,5 @@ function typeBox() {
 setTimeout(typeBox, 2000);
 window.addEventListener("message", function(event) {
     document.getElementById("terminalpre").innerText += "\n" + JSON.stringify(event.data);
+    typeBox();
 });

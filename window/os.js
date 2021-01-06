@@ -100,6 +100,9 @@ window.addEventListener('message', function(event) {
             appWindow.postMessage('Success in opening program');
         } 
         catch(err) { appWindow.postMessage(err.message); }
-    }  
+    }
+    else {
+        appWindow.postMessage("No such command");
+    }
 });
 boot();
