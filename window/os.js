@@ -4,7 +4,7 @@ var sys = {
  processes: [],
  globalFont: 'arial',
  availFonts: ['arial', 'helvetica', 'verdana', 'courier new', 'garamond'],
- taskbar: ['Files', 'TXT', 'Settings'],
+ taskbar: ['Files', 'TXT', 'Settings', 'Terminal', 'ZOOM'],
  desktop: [],
  settings: {
      defaultWindowHeight: 60,
@@ -16,9 +16,22 @@ function boot(){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
+        pinIcon.src = './fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
     }
     document.body.style.fontFamily = sys.globalFont;
+
+    // datetime display
+    datetime = document.createElement('div');
+    datetime.style.position = 'absolute';
+    datetime.style.top = '50%';
+    datetime.style.transform = 'translateY(-50%)';
+    datetime.style.right = 0;
+    datetime.style.paddingRight = '10px';
+    document.getElementById('taskbar').appendChild(datetime);
+    datetime.style.color = 'white';
+    datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' ');
+    setInterval(function() { datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' '); }, 1000);
 }
 function openPrgm(name){
     var window = document.createElement('div');
@@ -26,7 +39,8 @@ function openPrgm(name){
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
-    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>'
+    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
+    window.style.backgroundColor = "#EEEEEE";
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
@@ -38,6 +52,7 @@ function openPrgm(name){
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
     frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
     frame.style.marginTop = '6px';
+    frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
@@ -50,10 +65,24 @@ function closePrgm(name, window){
     window.style.display = 'none';
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
+    window.remove(); // stops running processes; will reduce lag
 }
 function saveFile(name, dir, type, data){
-    fs.writeFile('.fs/'+dir+'/'+name+'.'+type, data, (err) => {
+    fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
+// RECIEVE MESSAGES SENT BY APPS TO THE OS
+window.addEventListener('message', function(event) {
+    command = event.data;
+    appWindow = event.source;
+    if (command.Name == "savefile") {
+        try {
+            saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+            appWindow.postMessage("success in file writing");
+        } catch(err) { appWindow.postMessage(err.message); }
+    } else if (command.Name == "fetchsystemdata") {
+        appWindow.postMessage(sys);
+    }
+});
 boot();
