@@ -15,10 +15,13 @@ function typeBox() {
     }
     input.onkeydown = function(event) {
         if (event.which == 13) {
-            window.parent.postMessage({
-                name: this.innerText.split(" ")[0],
-                args: this.innerText.split(" ").splice(1, this.innerText.split("").length - 2)
-            });
+            if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
+            else {
+                window.parent.postMessage({
+                    name: this.innerText.match(/\S+/g)[0],
+                    args: this.innerText.match(/\S+/g).splice(1, this.innerText.split("").length - 2)
+                });
+            }
             return false;
         }
     }
