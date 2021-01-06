@@ -68,7 +68,7 @@ function closePrgm(name, window){
     window.remove(); // stops running processes; will reduce lag
 }
 function saveFile(name, dir, type, data){
-    fs.writeFile(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
+    fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
@@ -77,7 +77,10 @@ window.addEventListener('message', function(event) {
     command = event.data;
     appWindow = event.source;
     if (command.Name == "savefile") {
-        saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+        try {
+            saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+            appWindow.postMessage("success in file writing");
+        } catch(err) { appWindow.postMessage(err.message); }
     } else if (command.Name == "fetchsystemdata") {
         appWindow.postMessage(sys);
     }
