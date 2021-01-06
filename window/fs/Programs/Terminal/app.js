@@ -16,11 +16,11 @@ function typeBox() {
     input.onkeydown = function(event) {
         if (event.which == 13) {
             window.parent.postMessage({
-                Name: this.innerText.split(" ")[0],
+                name: this.innerText.split(" ")[0],
                 args: this.innerText.split(" ").splice(1, this.innerText.split("").length - 2)
             });
             setTimeout(typeBox, 500);
-            return false; // prevent adding a line break
+            return false;
         }
     }
 }

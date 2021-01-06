@@ -65,24 +65,41 @@ function closePrgm(name, window){
     window.style.display = 'none';
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
-    window.remove(); // stops running processes; will reduce lag
+    window.remove();
 }
 function saveFile(name, dir, type, data){
     fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
-// RECIEVE MESSAGES SENT BY APPS TO THE OS
 window.addEventListener('message', function(event) {
     command = event.data;
     appWindow = event.source;
-    if (command.Name == "savefile") {
+    if (command.name == "savefile") {
         try {
             saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
             appWindow.postMessage("success in file writing");
-        } catch(err) { appWindow.postMessage(err.message); }
-    } else if (command.Name == "fetchsystemdata") {
+        } 
+        catch(err) { appWindow.postMessage(err.message); }
+    } 
+    else if (command.name == "fetchsystemdata") {
         appWindow.postMessage(sys);
+    } 
+    else if (command.name == 'dir'){
+        try {
+            fs.readdir(__dirname+'/fs/'+command.args[0], (err, files) => {
+                if(err) throw err;
+                appWindow.postMessage(files);
+            });
+        } 
+        catch(err) { appWindow.postMessage(err.message); }
     }
+    else if (command.name == 'run'){
+        try {
+            openPrgm(command.args[0])
+            appWindow.postMessage('Success in opening program');
+        } 
+        catch(err) { appWindow.postMessage(err.message); }
+    }  
 });
 boot();
