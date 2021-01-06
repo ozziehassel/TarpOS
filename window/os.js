@@ -75,8 +75,11 @@ function saveFile(name, dir, type, data){
 // RECIEVE MESSAGES SENT BY APPS TO THE OS
 window.addEventListener('message', function(event) {
     command = event.data;
+    appWindow = event.source;
     if (command.Name == "savefile") {
         saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+    } else if (command.Name == "fetchsystemdata") {
+        appWindow.postMessage(sys);
     }
 });
 boot();
