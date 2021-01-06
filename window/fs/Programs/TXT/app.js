@@ -6,5 +6,8 @@ function readTextArea(){
     else{
         var name = document.getElementById('filename').value;
     }
-    window.parent.postMessage('savefile;;' + name + ';;Documents;;txt;;' + text);
+    window.parent.postMessage({
+        Name: "savefile",
+        args: [name, "Documents", "txt", text]
+    });
 }

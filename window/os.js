@@ -72,10 +72,11 @@ function saveFile(name, dir, type, data){
         if(err) throw err;
     })
 }
+// RECIEVE MESSAGES SENT BY APPS TO THE OS
 window.addEventListener('message', function(event) {
-    splitMessage = event.data.split(";;")
-    if (splitMessage[0] == "savefile") {
-        saveFile(splitMessage[1], splitMessage[2], splitMessage[3], splitMessage[4]);
+    command = event.data;
+    if (command.Name == "savefile") {
+        saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
     }
 });
 boot();
