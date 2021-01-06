@@ -1,10 +1,10 @@
 function readTextArea(){
     var text = document.getElementById('textarea').value;
-    if(document.getElementById('filename').value == undefined || ' ' || ''){
+    if(document.getElementById('filename').value == undefined || document.getElementById('filename').value == ' ' || document.getElementById('filename').value == ''){
         var name = 'txt';
     }
     else{
         var name = document.getElementById('filename').value;
     }
-    saveFile(name, 'Documents', 'txt', text);
+    window.parent.postMessage('savefile;;' + name + ';;Documents;;txt;;' + text);
 }

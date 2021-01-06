@@ -68,8 +68,14 @@ function closePrgm(name, window){
     window.remove(); // stops running processes; will reduce lag
 }
 function saveFile(name, dir, type, data){
-    fs.writeFile('.fs/'+dir+'/'+name+'.'+type, data, (err) => {
+    fs.writeFile(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
+window.addEventListener('message', function(event) {
+    splitMessage = event.data.split(";;")
+    if (splitMessage[0] == "savefile") {
+        saveFile(splitMessage[1], splitMessage[2], splitMessage[3], splitMessage[4]);
+    }
+});
 boot();
