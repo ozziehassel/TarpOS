@@ -7,7 +7,7 @@ function readTextArea(){
         var name = document.getElementById('filename').value;
     }
     window.parent.postMessage({
-        Name: "savefile",
+        name: "savefile",
         args: [name, "Documents", "txt", text]
     });
 }
