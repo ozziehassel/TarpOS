@@ -19,8 +19,8 @@ function typeBox() {
             if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
             else {
                 window.parent.postMessage({
-                    name: this.innerText.match(/\S+/g)[0],
-                    args: this.innerText.match(/\S+/g).splice(1, this.innerText.split("").length - 2)
+                    name: parse_cmdline(this.innerText)[0],
+                    args: parse_cmdline(this.innerText).splice(1, parse_cmdline(this.innerText).length - 1)
                 });
             }
             return false;
