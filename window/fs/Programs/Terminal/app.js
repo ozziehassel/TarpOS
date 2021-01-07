@@ -1,4 +1,5 @@
 document.body.style.margin = 0;
+document.body.style.backgroundColor = "#000000";
 document.getElementById("terminalpre").innerText += "Starting TARP terminal...";
 function typeBox() {
     document.getElementById("terminalpre").innerText += "\nTARP: ";
@@ -15,11 +16,13 @@ function typeBox() {
     }
     input.onkeydown = function(event) {
         if (event.which == 13) {
-            window.parent.postMessage({
-                name: this.innerText.split(" ")[0],
-                args: this.innerText.split(" ").splice(1, this.innerText.split("").length - 2)
-            });
-            setTimeout(typeBox, 500);
+            if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
+            else {
+                window.parent.postMessage({
+                    name: parse_cmdline(this.innerText)[0],
+                    args: parse_cmdline(this.innerText).splice(1, parse_cmdline(this.innerText).length - 1)
+                });
+            }
             return false;
         }
     }
@@ -27,4 +30,5 @@ function typeBox() {
 setTimeout(typeBox, 2000);
 window.addEventListener("message", function(event) {
     document.getElementById("terminalpre").innerText += "\n" + JSON.stringify(event.data);
+    typeBox();
 });
