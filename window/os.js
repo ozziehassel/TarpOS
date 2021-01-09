@@ -51,7 +51,9 @@ function openPrgm(name){
     frame.id = name+'_frame';
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
     frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
-    frame.style.marginTop = '6px';
+    frame.style.position = 'absolute';
+    frame.style.right = '0';
+    frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
