@@ -12,6 +12,8 @@ var sys = {
  }
 }
 function boot(){
+    prgmZindex = 1;
+
     for(i=0;i<sys.taskbar.length;i++){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
@@ -61,6 +63,12 @@ function openPrgm(name){
     $(window).draggable({
         containment: "parent"
     });
+    
+    // move dragged window to front
+    prgmZindex++;
+    window.style.zIndex = prgmZindex;
+    window.addEventListener("mousedown", function() { prgmZindex++; this.style.zIndex = prgmZindex; });
+
     sys.processes.push(name);
 }
 function closePrgm(name, window){
