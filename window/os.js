@@ -109,6 +109,14 @@ window.addEventListener('message', function(event) {
         } 
         catch(err) { appWindow.postMessage(err.message); }
     }
+    else if (command.name == 'readfile') {
+        try {
+            // file, encoding (ex.: utf-8)
+            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], command.args[1]);
+            appWindow.postMessage(file_contents);
+        }
+        catch(err) { appWindow.postMessage(err.message); }
+    }
     else {
         appWindow.postMessage("No such command");
     }
