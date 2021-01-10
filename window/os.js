@@ -111,8 +111,8 @@ window.addEventListener('message', function(event) {
     }
     else if (command.name == 'readfile') {
         try {
-            // file, encoding (ex.: utf-8)
-            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], command.args[1]);
+            // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
+            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
             appWindow.postMessage(file_contents);
         }
         catch(err) { appWindow.postMessage(err.message); }
