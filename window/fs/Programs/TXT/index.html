@@ -1,11 +1,21 @@
 <script src='app.js'></script>
-<textarea id='textarea'
+<div
     style="
-    width: 100%;
-    height: 80%;
-    resize: vertical;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
     ">
-</textarea>
-<button onclick='readTextArea()'>Save</button>
-<input id='filename' placeholder="filename">
-<button onclick='settings()'>Settings</button>
+    <div id='menu'
+        style="
+        resize: none;
+        ">
+        <button onclick='readTextArea()'>Save</button>
+        <input id='filename' placeholder="filename">
+        <button onclick='settings()'>Settings</button>
+    </div>
+    <textarea id='textarea'
+        style="
+        flex: 1 1 auto;
+        resize: none;
+        "></textarea>
+</div>
