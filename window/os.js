@@ -12,6 +12,8 @@ var sys = {
  }
 }
 function boot(){
+    prgmZindex = 1;
+
     for(i=0;i<sys.taskbar.length;i++){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
@@ -51,7 +53,9 @@ function openPrgm(name){
     frame.id = name+'_frame';
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
     frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
-    frame.style.marginTop = '6px';
+    frame.style.position = 'absolute';
+    frame.style.right = '0';
+    frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
@@ -59,6 +63,12 @@ function openPrgm(name){
     $(window).draggable({
         containment: "parent"
     });
+    
+    // move dragged window to front
+    prgmZindex++;
+    window.style.zIndex = prgmZindex;
+    window.addEventListener("mousedown", function() { prgmZindex++; this.style.zIndex = prgmZindex; });
+
     sys.processes.push(name);
 }
 function closePrgm(name, window){
@@ -97,6 +107,14 @@ window.addEventListener('message', function(event) {
             openPrgm(command.args[0])
             appWindow.postMessage('Success in opening program');
         } 
+        catch(err) { appWindow.postMessage(err.message); }
+    }
+    else if (command.name == 'readfile') {
+        try {
+            // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
+            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
+            appWindow.postMessage(file_contents);
+        }
         catch(err) { appWindow.postMessage(err.message); }
     }
     else {
