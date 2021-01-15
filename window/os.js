@@ -114,6 +114,7 @@ window.addEventListener('message', function(event) {
         sys.settings.defaultWindowWidth = command.args[0];
         sys.settings.defaultWindowHeight = command.args[1];
         sys.globalFont = command.args[2];
+        sys.processes = [];
         fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
         window.postMessage({name: 'requestrestart', args: []});
     }
