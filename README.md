@@ -9,5 +9,8 @@ There aren't any finished builds at the moment, but you can test unfinished buil
 4. Run `npm install`.
 5. Once the package has finished installing, run `npm start`.
 
+## TarpOS Docs
+Learn how to use TarpOS with the offical [docs](https://github.com/ozziehassel/TarpOS/blob/main/docs.md).
+
 ## More Information
 TarpOS was primarily written in JavaScript and built with [Electron](https://github.com/electron/electron). All contributions are welcome.
