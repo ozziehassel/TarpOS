@@ -1,16 +1,6 @@
 const { BrowserWindow } = require('electron').remote;
 const fs = require('fs');
-var sys = {
- processes: [],
- globalFont: 'arial',
- availFonts: ['arial', 'helvetica', 'verdana', 'courier new', 'garamond'],
- taskbar: ['Files', 'TXT', 'Settings', 'Terminal', 'ZOOM'],
- desktop: [],
- settings: {
-     defaultWindowHeight: 60,
-     defaultWindowWidth: 50
- }
-}
+var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
 
@@ -116,6 +106,17 @@ window.addEventListener('message', function(event) {
             appWindow.postMessage(file_contents);
         }
         catch(err) { appWindow.postMessage(err.message); }
+    }
+    else if (command.name == 'requestrestart') {
+        location.reload(); // temporary; ask user if want to reboot
+    }
+    else if (command.name == 'setsettings') {
+        sys.settings.defaultWindowWidth = command.args[0];
+        sys.settings.defaultWindowHeight = command.args[1];
+        sys.globalFont = command.args[2];
+        sys.processes = [];
+        fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
+        window.postMessage({name: 'requestrestart', args: []});
     }
     else {
         appWindow.postMessage("No such command");
