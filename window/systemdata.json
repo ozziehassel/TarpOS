@@ -1,1 +1,8 @@
-{"processes":[],"globalFont":"verdana","availFonts":["arial","helvetica","verdana","courier new","garamond"],"taskbar":["Files","TXT","Settings","Terminal","ZOOM"],"desktop":[],"settings":{"defaultWindowHeight":60,"defaultWindowWidth":50}}
+{
+    "processes": [],
+    "globalFont": "verdana",
+    "availFonts": ["arial","helvetica","verdana","courier new","garamond"],
+    "taskbar": ["Files","TXT","Settings","Terminal","ZOOM"],
+    "desktop": [],
+    "settings": {"defaultWindowHeight":60,"defaultWindowWidth":50}
+}
