@@ -1,6 +1,8 @@
 const { BrowserWindow } = require('electron').remote;
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
+const fsextra = require('fs-extra');
+const ghdownload = require('github-download');
 var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
@@ -122,6 +124,24 @@ window.addEventListener('message', function(event) {
             sys.processes = [];
             fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
             window.postMessage({name: 'requestrestart', args: []});
+            break;
+        case 'github':
+            if (command.args[0] == 'install') {
+                try {
+                    target_dir = __dirname + "/fs/Programs/" + command.args[2];
+                    if (fs.existsSync(target_dir)) {
+                        fsextra.removeSync(target_dir);
+                    }
+                    ghdownload({user: command.args[1], repo: command.args[2], ref: command.args[3]}, __dirname + "/fs/Programs/" + command.args[2]);
+                    appWindow.postMessage("Success in installation. Use \"run " + command.args[2] + "\" to run the application.");
+                }
+                catch(err) {
+                    appWindow.postMessage(err);
+                }
+            }
+            else {
+                appWindow.postMessage("no such github command");
+            }
             break;
         default:
             appWindow.postMessage("No such command");
