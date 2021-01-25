@@ -30,25 +30,23 @@ function openPrgm(name){
     window.className = 'win';
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
-    window.style.display = "flex";
-    window.style.flexDirection = "column";
-    topbar = document.createElement('div');
-    topbar.style.height = '3vh';
-    window.appendChild(topbar);
     var close = document.createElement('button');
-    topbar.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
+    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
     window.style.backgroundColor = "#EEEEEE";
     close.className = 'closeBtn';
     close.innerHTML = 'X';
-    topbar.appendChild(close);
+    window.appendChild(close);
     close.addEventListener('click', () => {
         closePrgm(name, window);
     });
     var frame = document.createElement('iframe');
     frame.id = name+'_frame';
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
+    frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
+    frame.style.position = 'absolute';
+    frame.style.right = '0';
+    frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
-    frame.style.flex = "1 1 auto";
     frame.src = './fs/Programs/'+name+'/index.html'
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
