@@ -76,51 +76,53 @@ function saveFile(name, dir, type, data){
 window.addEventListener('message', function(event) {
     command = event.data;
     appWindow = event.source;
-    if (command.name == "savefile") {
-        try {
-            saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
-            appWindow.postMessage("success in file writing");
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    } 
-    else if (command.name == "fetchsystemdata") {
-        appWindow.postMessage(sys);
-    } 
-    else if (command.name == 'dir'){
-        try {
-            directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
-            appWindow.postMessage(directory_contents);
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'run'){
-        try {
-            openPrgm(command.args[0])
-            appWindow.postMessage('Success in opening program');
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'readfile') {
-        try {
-            // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
-            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
-            appWindow.postMessage(file_contents);
-        }
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'requestrestart') {
-        location.reload(); // temporary; ask user if want to reboot
-    }
-    else if (command.name == 'setsettings') {
-        sys.settings.defaultWindowWidth = command.args[0];
-        sys.settings.defaultWindowHeight = command.args[1];
-        sys.globalFont = command.args[2];
-        sys.processes = [];
-        fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
-        window.postMessage({name: 'requestrestart', args: []});
-    }
-    else {
-        appWindow.postMessage("No such command");
+    switch(command.name) {
+        case 'savefile':
+            try {
+                saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+                appWindow.postMessage("success in file writing");
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'fetchsystemdata':
+            appWindow.postMessage(sys);
+            break;
+        case 'dir':
+            try {
+                directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
+                appWindow.postMessage(directory_contents);
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'run':
+            try {
+                openPrgm(command.args[0])
+                appWindow.postMessage('Success in opening program');
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'readfile':
+            try {
+                // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
+                file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
+                appWindow.postMessage(file_contents);
+            }
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'requestrestart':
+            location.reload(); // temporary; ask user if want to reboot
+            break;
+        case 'setsettings':
+            sys.settings.defaultWindowWidth = command.args[0];
+            sys.settings.defaultWindowHeight = command.args[1];
+            sys.globalFont = command.args[2];
+            sys.processes = [];
+            fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
+            window.postMessage({name: 'requestrestart', args: []});
+            break;
+        default:
+            appWindow.postMessage("No such command");
+            break;
     }
 });
 boot();
