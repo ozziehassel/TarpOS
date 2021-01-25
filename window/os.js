@@ -22,8 +22,8 @@ function boot(){
     datetime.style.paddingRight = '10px';
     document.getElementById('taskbar').appendChild(datetime);
     datetime.style.color = 'white';
-    datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' ');
-    setInterval(function() { datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' '); }, 1000);
+    datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':');
+    setInterval(function() { datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':'); }, 2500);
 }
 function openPrgm(name){
     var window = document.createElement('div');
