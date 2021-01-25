@@ -1,9 +1,8 @@
 document.getElementById("terminalpre").innerText += "Starting TARP terminal...";
 function typeBox() {
     document.getElementById("terminalpre").innerText += "\nTARP: ";
-    input = document.createElement("code");
+    input = document.createElement("span");
     input.contentEditable = "true";
-    input.style.border = "none";
     document.getElementById("terminalpre").appendChild(input);
     input.focus();
     // prevent losing cursor
