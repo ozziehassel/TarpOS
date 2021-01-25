@@ -1,13 +1,9 @@
-document.body.style.margin = 0;
-document.body.style.backgroundColor = "#000000";
 document.getElementById("terminalpre").innerText += "Starting TARP terminal...";
 function typeBox() {
     document.getElementById("terminalpre").innerText += "\nTARP: ";
     input = document.createElement("code");
     input.contentEditable = "true";
     input.style.border = "none";
-    input.style.backgroundColor = "black";
-    input.style.color = "white";
     document.getElementById("terminalpre").appendChild(input);
     input.focus();
     // prevent losing cursor
