@@ -10,6 +10,7 @@ Commands are entered as `COMMANDHERE ARGUMENT1 ARGUMENT2 ARGUMENT3`
 - <b>readfile</b> - Returns contents of specified file - `reafile FILENAME ENCODING FLAG` 
 - <b>requestrestart</b> - Asks user if they would like reboot - `requestreboot`
 - <b>setsettings</b> - Sets system settings and reboots- `setsettings DEFAULTWINDOWHEIGHT DEFAULTWINDOWWIDTH GLOBALFONT`
+- <b>github install</b> - Downloads an app from a GitHub repository. The GitHub repository can be for a TarpOS app, but some normal non-TarpOS web apps will also work. - `github install USERNAME REPOSITORYNAME BRANCHNAME`
 
 ## Creating a Program
 Creating a TarpOS program is easy. To get started, create a folder in the `/Programs/` directory. Make sure to name your folder after the program. Next, add/create the following files in your new folder.
