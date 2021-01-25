@@ -24,6 +24,6 @@ function typeBox() {
 }
 setTimeout(typeBox, 2000);
 window.addEventListener("message", function(event) {
-    document.getElementById("terminalpre").innerText += "\n" + JSON.stringify(event.data);
+    document.getElementById("terminalpre").innerText += "\n" + ((typeof(event.data) == "string")?event.data:JSON.stringify(event.data));
     typeBox();
 });
