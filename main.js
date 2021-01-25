@@ -1,5 +1,10 @@
-const {app, BrowserWindow} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
+
+ipcMain.on("restartos", ( event ) => {
+  app.relaunch();
+  app.exit(0);
+} );
 
 function createWindow () {
   const mainWindow = new BrowserWindow({

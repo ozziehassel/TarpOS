@@ -1,4 +1,5 @@
 const { BrowserWindow } = require('electron').remote;
+const { ipcRenderer } = require('electron');
 const fs = require('fs');
 var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
@@ -110,7 +111,9 @@ window.addEventListener('message', function(event) {
             catch(err) { appWindow.postMessage(err.message); }
             break;
         case 'requestrestart':
-            location.reload(); // temporary; ask user if want to reboot
+            if (confirm("reboot?")) { // temporary; change to TarpOS style
+                ipcRenderer.send("restartos");
+            }
             break;
         case 'setsettings':
             sys.settings.defaultWindowWidth = command.args[0];
