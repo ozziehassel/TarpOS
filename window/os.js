@@ -7,6 +7,7 @@ function boot(){
     for(i=0;i<sys.taskbar.length;i++){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
+        pinIcon.setAttribute('draggable', false);
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
         pinIcon.src = './fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
