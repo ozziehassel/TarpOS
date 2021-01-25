@@ -7,6 +7,7 @@ body{
     background-color: #121212;
     height: 93vh;
     width: 100%;
+    user-select: none;
 }   
 #taskbar{
     position: absolute;
@@ -14,6 +15,7 @@ body{
     height: 7vh;
     width: 100%;
     bottom: 0;
+    user-select: none;
 }
 .closeBtn{
     border: 0;
