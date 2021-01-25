@@ -10,7 +10,7 @@ function typeBox() {
         this.focus();
     }
     input.onkeydown = function(event) {
-        if (event.which == 13) {
+        if (event.key == "Enter") {
             if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
             else {
                 window.parent.postMessage({
