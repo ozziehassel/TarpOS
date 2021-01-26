@@ -7,5 +7,7 @@
   "devDependencies": {
     "electron": "^11.2.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "adm-zip": "^0.5.1"
+  }
 }

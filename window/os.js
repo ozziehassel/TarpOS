@@ -129,12 +129,17 @@ window.addEventListener('message', function(event) {
             if (command.args[0] == 'install') {
                 try {
                     target_dir = __dirname + "/fs/Programs/" + command.args[2];
-                    online_location = "https://github.com/" + command.args[1] + "/" + command.args[2] + "/archive/" + command.args[3] + ".zip";
+                    online_location = "https://codeload.github.com/" + command.args[1] + "/" + command.args[2] + "/zip/" + command.args[3];
                     local_location = fs.createWriteStream(target_dir + ".zip");
                     request = https.get(online_location, function(response) {
-                        response.pipe(local_location);
-                        var zip = new admZip(target_dir + ".zip"); 
-                        zip.extractAllTo(__dirname + "/fs/Programs/");
+                        stream = response.pipe(local_location);
+                        stream.on("finish", () => {
+                            var zip = new admZip(target_dir + ".zip"); 
+                            zip.extractAllTo(__dirname + "/fs/Programs/");
+                            fs.renameSync(target_dir + "-" + command.args[3], target_dir)
+                            appWindow.postMessage("Success in installing program. Use 'run " + command.args[2] + "' to run program.");
+                            fs.unlinkSync(target_dir + ".zip");
+                        });
                     });
                 }
                 catch(err) {
