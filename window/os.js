@@ -1,8 +1,8 @@
 const { BrowserWindow } = require('electron').remote;
 const { ipcRenderer } = require('electron');
 const fs = require('fs');
-const fsextra = require('fs-extra');
-const ghdownload = require('github-download');
+const https = require('https');
+const admZip = require('adm-zip');
 var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
@@ -129,11 +129,13 @@ window.addEventListener('message', function(event) {
             if (command.args[0] == 'install') {
                 try {
                     target_dir = __dirname + "/fs/Programs/" + command.args[2];
-                    if (fs.existsSync(target_dir)) {
-                        fsextra.removeSync(target_dir);
-                    }
-                    ghdownload({user: command.args[1], repo: command.args[2], ref: command.args[3]}, __dirname + "/fs/Programs/" + command.args[2]);
-                    appWindow.postMessage("Success in installation. Use \"run " + command.args[2] + "\" to run the application.");
+                    online_location = "https://github.com/" + command.args[1] + "/" + command.args[2] + "/archive/" + command.args[3] + ".zip";
+                    local_location = fs.createWriteStream(target_dir + ".zip");
+                    request = https.get(online_location, function(response) {
+                        response.pipe(local_location);
+                        var zip = new admZip(target_dir + ".zip"); 
+                        zip.extractAllTo(__dirname + "/fs/Programs/");
+                    });
                 }
                 catch(err) {
                     appWindow.postMessage(err);
