@@ -1,13 +1,8 @@
-document.body.style.margin = 0;
-document.body.style.backgroundColor = "#000000";
 document.getElementById("terminalpre").innerText += "Starting TARP terminal...";
 function typeBox() {
     document.getElementById("terminalpre").innerText += "\nTARP: ";
-    input = document.createElement("code");
+    input = document.createElement("span");
     input.contentEditable = "true";
-    input.style.border = "none";
-    input.style.backgroundColor = "black";
-    input.style.color = "white";
     document.getElementById("terminalpre").appendChild(input);
     input.focus();
     // prevent losing cursor
@@ -15,7 +10,7 @@ function typeBox() {
         this.focus();
     }
     input.onkeydown = function(event) {
-        if (event.which == 13) {
+        if (event.key == "Enter") {
             if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
             else {
                 window.parent.postMessage({
@@ -29,6 +24,6 @@ function typeBox() {
 }
 setTimeout(typeBox, 2000);
 window.addEventListener("message", function(event) {
-    document.getElementById("terminalpre").innerText += "\n" + JSON.stringify(event.data);
+    document.getElementById("terminalpre").innerText += "\n" + ((typeof(event.data) == "string")?event.data:JSON.stringify(event.data));
     typeBox();
 });

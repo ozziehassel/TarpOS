@@ -1,5 +1,8 @@
 const { BrowserWindow } = require('electron').remote;
+const { ipcRenderer } = require('electron');
 const fs = require('fs');
+const https = require('https');
+const admZip = require('adm-zip');
 var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
@@ -7,6 +10,7 @@ function boot(){
     for(i=0;i<sys.taskbar.length;i++){
         var pinIcon = document.createElement('img');
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
+        pinIcon.setAttribute('draggable', false);
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
         pinIcon.src = './fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
@@ -22,8 +26,8 @@ function boot(){
     datetime.style.paddingRight = '10px';
     document.getElementById('taskbar').appendChild(datetime);
     datetime.style.color = 'white';
-    datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' ');
-    setInterval(function() { datetime.innerText = (new Date()).toString().split(' ').splice(0, 5).join(' '); }, 1000);
+    datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':');
+    setInterval(function() { datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':'); }, 2500);
 }
 function openPrgm(name){
     var window = document.createElement('div');
@@ -75,51 +79,80 @@ function saveFile(name, dir, type, data){
 window.addEventListener('message', function(event) {
     command = event.data;
     appWindow = event.source;
-    if (command.name == "savefile") {
-        try {
-            saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
-            appWindow.postMessage("success in file writing");
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    } 
-    else if (command.name == "fetchsystemdata") {
-        appWindow.postMessage(sys);
-    } 
-    else if (command.name == 'dir'){
-        try {
-            directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
-            appWindow.postMessage(directory_contents);
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'run'){
-        try {
-            openPrgm(command.args[0])
-            appWindow.postMessage('Success in opening program');
-        } 
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'readfile') {
-        try {
-            // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
-            file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
-            appWindow.postMessage(file_contents);
-        }
-        catch(err) { appWindow.postMessage(err.message); }
-    }
-    else if (command.name == 'requestrestart') {
-        location.reload(); // temporary; ask user if want to reboot
-    }
-    else if (command.name == 'setsettings') {
-        sys.settings.defaultWindowWidth = command.args[0];
-        sys.settings.defaultWindowHeight = command.args[1];
-        sys.globalFont = command.args[2];
-        sys.processes = [];
-        fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
-        window.postMessage({name: 'requestrestart', args: []});
-    }
-    else {
-        appWindow.postMessage("No such command");
+    switch(command.name) {
+        case 'savefile':
+            try {
+                saveFile(command.args[0], command.args[1], command.args[2], command.args[3]);
+                appWindow.postMessage("success in file writing");
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'fetchsystemdata':
+            appWindow.postMessage(sys);
+            break;
+        case 'dir':
+            try {
+                directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
+                appWindow.postMessage(directory_contents);
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'run':
+            try {
+                openPrgm(command.args[0])
+                appWindow.postMessage('Success in opening program');
+            } 
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'readfile':
+            try {
+                // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
+                file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
+                appWindow.postMessage(file_contents);
+            }
+            catch(err) { appWindow.postMessage(err.message); }
+            break;
+        case 'requestrestart':
+            if (confirm("reboot?")) { // temporary; change to TarpOS style
+                ipcRenderer.send("restartos");
+            }
+            break;
+        case 'setsettings':
+            sys.settings.defaultWindowWidth = command.args[0];
+            sys.settings.defaultWindowHeight = command.args[1];
+            sys.globalFont = command.args[2];
+            sys.processes = [];
+            fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
+            window.postMessage({name: 'requestrestart', args: []});
+            break;
+        case 'github':
+            if (command.args[0] == 'install') {
+                try {
+                    target_dir = __dirname + "/fs/Programs/" + command.args[2];
+                    online_location = "https://codeload.github.com/" + command.args[1] + "/" + command.args[2] + "/zip/" + command.args[3];
+                    local_location = fs.createWriteStream(target_dir + ".zip");
+                    request = https.get(online_location, function(response) {
+                        stream = response.pipe(local_location);
+                        stream.on("finish", () => {
+                            var zip = new admZip(target_dir + ".zip"); 
+                            zip.extractAllTo(__dirname + "/fs/Programs/");
+                            fs.renameSync(target_dir + "-" + command.args[3], target_dir)
+                            appWindow.postMessage("Success in installing program. Use 'run " + command.args[2] + "' to run program.");
+                            fs.unlinkSync(target_dir + ".zip");
+                        });
+                    });
+                }
+                catch(err) {
+                    appWindow.postMessage(err);
+                }
+            }
+            else {
+                appWindow.postMessage("no such github command");
+            }
+            break;
+        default:
+            appWindow.postMessage("No such command");
+            break;
     }
 });
 boot();
