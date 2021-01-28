@@ -29,7 +29,7 @@ function boot(){
     datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':');
     setInterval(function() { datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':'); }, 2500);
 }
-function openPrgm(name){
+function openPrgm(name, queryobj){
     var window = document.createElement('div');
     window.className = 'win';
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
@@ -52,6 +52,19 @@ function openPrgm(name){
     frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
+
+    // queryobj is an optional parameter that passes data into the app on opening via the frame URL's querystring. This way, for example, if you double-click a text file in the files program, you can have it open automatically in the txt program
+    if (queryobj) {
+        var str = [];
+        for (var p in queryobj) {
+            if (queryobj.hasOwnProperty(p)) {
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(queryobj[p]));
+            }
+        }
+        querystring = "?" + str.join("&");
+        frame.src += querystring;
+    }
+
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
@@ -99,8 +112,14 @@ window.addEventListener('message', function(event) {
             break;
         case 'run':
             try {
-                openPrgm(command.args[0])
-                appWindow.postMessage('Success in opening program');
+                if (command.args.length == 1) {
+                    openPrgm(command.args[0]);
+                    appWindow.postMessage('Success in opening program');
+                }
+                else if (command.args.length == 2) {
+                    // currently queryobj data doesn't work with terminal :( bc terminal only accepts strings
+                    openPrgm(command.args[0], command.args[1]);
+                }
             } 
             catch(err) { appWindow.postMessage(err.message); }
             break;

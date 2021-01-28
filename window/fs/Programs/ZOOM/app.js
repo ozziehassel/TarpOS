@@ -5,3 +5,10 @@ function joinMeeting(){
     document.getElementById("form").style.display = "none";
     document.body.style.margin = "0";
 }
+
+pageURL = new URL(location.href);
+preSetMeetingID = parseFloat(pageURL.searchParams.get("meetingid"));
+if (preSetMeetingID) {
+    document.getElementById("id").value = preSetMeetingID;
+    joinMeeting();
+}
