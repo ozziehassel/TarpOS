@@ -36,6 +36,10 @@ function openPrgm(name, queryobj){
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
     window.innerHTML = '<span style="font-weight: bold; padding-left: 6px; line-height: 3vh;">'+name+'</span>';
+    var iconuri = __dirname + '/fs/Programs/'+name+'/icon.png';
+    if (fs.existsSync(iconuri) && sys.settings.showWindowIcons) {
+        window.innerHTML = '<img style="width: 2vh; height: 2vh; padding: 0.5vh; position: absolute;" src="' + iconuri + '"> <span style="font-weight: bold; padding-left: 3vh; line-height: 3vh;">'+name+'</span>';
+    }
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
@@ -142,6 +146,10 @@ window.addEventListener('message', function(event) {
             sys.settings.defaultWindowWidth = command.args[0];
             sys.settings.defaultWindowHeight = command.args[1];
             sys.globalFont = command.args[2];
+            if (command.args[3] == "true" || command.args[3] == "false") {
+                command.args[3] = command.args[3] == "true";
+            }
+            sys.settings.showWindowIcons = command.args[3];
             sys.processes = [];
             fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
             window.postMessage({name: 'requestrestart', args: []});
