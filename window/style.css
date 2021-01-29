@@ -16,6 +16,7 @@ body{
     width: 100%;
     bottom: 0;
     user-select: none;
+    box-shadow: 0 2px 10px black; /* imo adds a bit of depth? you can remove it if you don't like it */
 }
 .closeBtn{
     border: 0;
@@ -35,6 +36,7 @@ body{
     background-color: white;
     border: 1px solid black;
     position: absolute;
+    box-shadow: 2px 2px 10px black;
 }
 iframe{
     border: 0;
