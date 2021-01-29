@@ -29,14 +29,13 @@ function boot(){
     datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':');
     setInterval(function() { datetime.innerText = (new Date()).toString().split(':').splice(0, 2).join(':'); }, 2500);
 }
-function openPrgm(name){
+function openPrgm(name, queryobj){
     var window = document.createElement('div');
     window.className = 'win';
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
-    window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
-    window.style.backgroundColor = "#EEEEEE";
+    window.innerHTML = '<span style="font-weight: bold; padding-left: 6px; line-height: 3vh;">'+name+'</span>';
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
@@ -52,6 +51,19 @@ function openPrgm(name){
     frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
     frame.src = './fs/Programs/'+name+'/index.html'
+
+    // queryobj is an optional parameter that passes data into the app on opening via the frame URL's querystring. This way, for example, if you double-click a text file in the files program, you can have it open automatically in the txt program
+    if (queryobj) {
+        var str = [];
+        for (var p in queryobj) {
+            if (queryobj.hasOwnProperty(p)) {
+                str.push(encodeURIComponent(p) + "=" + encodeURIComponent(queryobj[p]));
+            }
+        }
+        querystring = "?" + str.join("&");
+        frame.src += querystring;
+    }
+
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
@@ -66,10 +78,13 @@ function openPrgm(name){
     sys.processes.push(name);
 }
 function closePrgm(name, window){
-    window.style.display = 'none';
+    // close FX like windows; you can remove it if you want
+    closeFXlen = 150;
+    window.style.animation = "fadeZoomOut " + closeFXlen.toString() + "ms";
+    window.style.opacity = "0"; // so that there's no flash of display after animation plays
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
-    window.remove();
+    setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, window);
 }
 function saveFile(name, dir, type, data){
     fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
@@ -99,8 +114,14 @@ window.addEventListener('message', function(event) {
             break;
         case 'run':
             try {
-                openPrgm(command.args[0])
-                appWindow.postMessage('Success in opening program');
+                if (command.args.length == 1) {
+                    openPrgm(command.args[0]);
+                    appWindow.postMessage('Success in opening program');
+                }
+                else if (command.args.length == 2) {
+                    // currently queryobj data doesn't work with terminal :( bc terminal only accepts strings
+                    openPrgm(command.args[0], command.args[1]);
+                }
             } 
             catch(err) { appWindow.postMessage(err.message); }
             break;
