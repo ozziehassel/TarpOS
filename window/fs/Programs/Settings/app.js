@@ -15,14 +15,11 @@ window.addEventListener("message", function(event) {
             fontSelect.appendChild(option);
         }
         fontSelect.value = systemData.globalFont;
-        fontSelect.setAttribute("id", "font");
-        form.innerHTML += "<br />Show app icons on windows: <input id='windowicon' type='checkbox' />";
-        if (systemData.settings.showWindowIcons) { document.getElementById("windowicon").setAttribute("checked", "yessir"); };
         submitbutton = document.createElement("button");
         submitbutton.innerText = "Save settings and restart";
         document.body.appendChild(submitbutton);
         submitbutton.onclick = function() {
-            window.parent.postMessage({name: 'setsettings', args: [parseFloat(document.getElementById("windoww").value), parseFloat(document.getElementById("windowh").value), document.getElementById("font").value, document.getElementById("windowicon").checked]});
+            window.parent.postMessage({name: 'setsettings', args: [parseFloat(document.getElementById("windoww").value), parseFloat(document.getElementById("windowh").value), fontSelect.value]});
         }
     }
 });
