@@ -36,7 +36,6 @@ function openPrgm(name, queryobj){
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
     var close = document.createElement('button');
     window.innerHTML = '<span style="font-weight: bold; padding: 6px;">'+name+'</span>';
-    window.style.backgroundColor = "#EEEEEE";
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
