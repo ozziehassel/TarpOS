@@ -79,10 +79,13 @@ function openPrgm(name, queryobj){
     sys.processes.push(name);
 }
 function closePrgm(name, window){
-    window.style.display = 'none';
+    // close FX like windows; you can remove it if you want
+    closeFXlen = 150;
+    window.style.animation = "fadeZoomOut " + closeFXlen.toString() + "ms";
+    window.style.opacity = "0"; // so that there's no flash of display after animation plays
     sys.processes.splice(sys.processes.indexOf(name), 1);
     console.log(name);
-    window.remove();
+    setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, window);
 }
 function saveFile(name, dir, type, data){
     fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {

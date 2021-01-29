@@ -22,7 +22,7 @@ body{
     border: 0;
     border-bottom: 1px solid black;
     border-left: 1px solid black;
-    background-color: red;
+    background-color: #af0000; /* better spelling of asf */
     outline: 0;
     text-align: center;
     position: absolute;
@@ -32,6 +32,9 @@ body{
     height: 3vh;
     padding: 3px;
 }
+.closeBtn:hover {
+    background-color: #ff0000;
+}
 .win{
     background-color: white;
     border: 1px solid black;
@@ -40,4 +43,8 @@ body{
 }
 iframe{
     border: 0;
+}
+@keyframes fadeZoomOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0); opacity: 0; }
 }
