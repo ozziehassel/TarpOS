@@ -6,6 +6,7 @@ const admZip = require('adm-zip');
 var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
+    processId = 0;
 
     for(i=0;i<sys.taskbar.length;i++){
         var pinIcon = document.createElement('img');
@@ -31,6 +32,7 @@ function boot(){
 }
 function openPrgm(name, queryobj){
     var window = document.createElement('div');
+    window.setAttribute('id', processId);
     window.className = 'win';
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
@@ -39,9 +41,9 @@ function openPrgm(name, queryobj){
     close.className = 'closeBtn';
     close.innerHTML = 'X';
     window.appendChild(close);
-    close.addEventListener('click', () => {
-        closePrgm(name, window);
-    });
+    close.addEventListener('click',
+        new Function('closePrgm(' + processId.toString() + ')')
+    );
     var frame = document.createElement('iframe');
     frame.id = name+'_frame';
     frame.style.width = sys.settings.defaultWindowWidth + 'vw';
@@ -50,7 +52,8 @@ function openPrgm(name, queryobj){
     frame.style.right = '0';
     frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
-    frame.src = './fs/Programs/'+name+'/index.html'
+    frame.src = './fs/Programs/'+name+'/index.html';
+    querystring = '?processId=' + processId.toString();
 
     // queryobj is an optional parameter that passes data into the app on opening via the frame URL's querystring. This way, for example, if you double-click a text file in the files program, you can have it open automatically in the txt program
     if (queryobj) {
@@ -60,9 +63,10 @@ function openPrgm(name, queryobj){
                 str.push(encodeURIComponent(p) + "=" + encodeURIComponent(queryobj[p]));
             }
         }
-        querystring = "?" + str.join("&");
-        frame.src += querystring;
+        querystring += "&" + str.join("&");
     }
+
+    frame.src += querystring;
 
     window.appendChild(frame);
     document.getElementById('desktop').appendChild(window);
@@ -75,16 +79,19 @@ function openPrgm(name, queryobj){
     window.style.zIndex = prgmZindex;
     window.addEventListener("mousedown", function() { prgmZindex++; this.style.zIndex = prgmZindex; });
 
-    sys.processes.push(name);
+    sys.processes[processId] = {
+        name: name
+    };
+    processId++;
 }
-function closePrgm(name, window){
-    // close FX like windows; you can remove it if you want
+function closePrgm(id){
+    selected_window = document.getElementById(id);
     closeFXlen = 150;
-    window.style.animation = "fadeZoomOut " + closeFXlen.toString() + "ms";
-    window.style.opacity = "0"; // so that there's no flash of display after animation plays
-    sys.processes.splice(sys.processes.indexOf(name), 1);
-    console.log(name);
-    setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, window);
+    selected_window.style.animation = "fadeZoomOut " + closeFXlen.toString() + "ms";
+    selected_window.style.opacity = "0"; // so that there's no flash of display after animation plays
+    console.log('terminated process ' + id.toString());
+    delete sys.processes[id];
+    setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, selected_window);
 }
 function saveFile(name, dir, type, data){
     fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
@@ -142,7 +149,7 @@ window.addEventListener('message', function(event) {
             sys.settings.defaultWindowWidth = command.args[0];
             sys.settings.defaultWindowHeight = command.args[1];
             sys.globalFont = command.args[2];
-            sys.processes = [];
+            sys.processes = {};
             fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
             window.postMessage({name: 'requestrestart', args: []});
             break;
