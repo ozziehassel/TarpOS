@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const https = require('https');
 const admZip = require('adm-zip');
-var sys = JSON.parse(fs.readFileSync(__dirname + "/systemdata.json", "utf8"));
+var sys = JSON.parse(fs.readFileSync(__dirname + "/fs/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
     processId = 0;
@@ -150,7 +150,7 @@ window.addEventListener('message', function(event) {
             sys.settings.defaultWindowHeight = command.args[1];
             sys.globalFont = command.args[2];
             sys.processes = {};
-            fs.writeFileSync(__dirname + '/systemdata.json', JSON.stringify(sys));
+            fs.writeFileSync(__dirname + '/fs/systemdata.json', JSON.stringify(sys));
             window.postMessage({name: 'requestrestart', args: []});
             break;
         case 'github':
