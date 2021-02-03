@@ -87,6 +87,7 @@ function openPrgm(name, queryobj){
     frame.src += querystring;
 
     window.appendChild(frame);
+    window.style.animation = 'fadeZoomIn 150ms';
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
         containment: "parent"
