@@ -3,7 +3,25 @@ const { ipcRenderer } = require('electron');
 const fs = require('fs');
 const https = require('https');
 const admZip = require('adm-zip');
-var sys = JSON.parse(fs.readFileSync(__dirname + "/fs/systemdata.json", "utf8"));
+const electron = require('electron');
+const userDataPath = (electron.app || electron.remote.app).getPath(
+  'userData'
+);
+if (!fs.existsSync(userDataPath + '/fs')) {
+    target_dir = userDataPath + '/fs';
+    online_location = 'https://raw.githubusercontent.com/yikuansun/TarpOS/main/defaultfilesystem.zip';
+    local_location = fs.createWriteStream(target_dir + ".zip");
+    request = https.get(online_location, function(response) {
+        stream = response.pipe(local_location);
+        stream.on("finish", () => {
+            var zip = new admZip(target_dir + ".zip"); 
+            zip.extractAllTo(userDataPath + '/');
+            fs.unlinkSync(target_dir + ".zip");
+            location.reload();
+        });
+    });
+}
+var sys = JSON.parse(fs.readFileSync(userDataPath + "/fs/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
     processId = 0;
@@ -13,7 +31,7 @@ function boot(){
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
         pinIcon.setAttribute('draggable', false);
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
-        pinIcon.src = './fs/Programs/'+sys.taskbar[i]+'/icon.png';
+        pinIcon.src = userDataPath + '/fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
     }
     document.body.style.fontFamily = sys.globalFont;
@@ -52,7 +70,7 @@ function openPrgm(name, queryobj){
     frame.style.right = '0';
     frame.style.bottom = '0';
     frame.style.backgroundColor = "#FFFFFF";
-    frame.src = './fs/Programs/'+name+'/index.html';
+    frame.src = userDataPath + '/fs/Programs/'+name+'/index.html';
     querystring = '?processId=' + processId.toString();
 
     // queryobj is an optional parameter that passes data into the app on opening via the frame URL's querystring. This way, for example, if you double-click a text file in the files program, you can have it open automatically in the txt program
@@ -94,7 +112,7 @@ function closePrgm(id){
     setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, selected_window);
 }
 function saveFile(name, dir, type, data){
-    fs.writeFileSync(__dirname+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
+    fs.writeFileSync(userDataPath+'/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
@@ -114,7 +132,7 @@ window.addEventListener('message', function(event) {
             break;
         case 'dir':
             try {
-                directory_contents = fs.readdirSync(__dirname+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
+                directory_contents = fs.readdirSync(userDataPath+'/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
                 appWindow.postMessage(directory_contents);
             } 
             catch(err) { appWindow.postMessage(err.message); }
@@ -135,7 +153,7 @@ window.addEventListener('message', function(event) {
         case 'readfile':
             try {
                 // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
-                file_contents = fs.readFileSync(__dirname+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
+                file_contents = fs.readFileSync(userDataPath+'/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
                 appWindow.postMessage(file_contents);
             }
             catch(err) { appWindow.postMessage(err.message); }
@@ -150,20 +168,20 @@ window.addEventListener('message', function(event) {
             sys.settings.defaultWindowHeight = command.args[1];
             sys.globalFont = command.args[2];
             sys.processes = {};
-            fs.writeFileSync(__dirname + '/fs/systemdata.json', JSON.stringify(sys));
+            fs.writeFileSync(userDataPath + '/fs/systemdata.json', JSON.stringify(sys));
             window.postMessage({name: 'requestrestart', args: []});
             break;
         case 'github':
             if (command.args[0] == 'install') {
                 try {
-                    target_dir = __dirname + "/fs/Programs/" + command.args[2];
+                    target_dir = userDataPath + "/fs/Programs/" + command.args[2];
                     online_location = "https://codeload.github.com/" + command.args[1] + "/" + command.args[2] + "/zip/" + command.args[3];
                     local_location = fs.createWriteStream(target_dir + ".zip");
                     request = https.get(online_location, function(response) {
                         stream = response.pipe(local_location);
                         stream.on("finish", () => {
                             var zip = new admZip(target_dir + ".zip"); 
-                            zip.extractAllTo(__dirname + "/fs/Programs/");
+                            zip.extractAllTo(userDataPath + "/fs/Programs/");
                             fs.renameSync(target_dir + "-" + command.args[3], target_dir)
                             appWindow.postMessage("Success in installing program. Use 'run " + command.args[2] + "' to run program.");
                             fs.unlinkSync(target_dir + ".zip");
