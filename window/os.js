@@ -118,8 +118,8 @@ function saveFile(name, dir, type, data){
     })
 }
 window.addEventListener('message', function(event) {
-    command = event.data;
-    appWindow = event.source;
+    var command = event.data;
+    var appWindow = event.source;
     switch(command.name) {
         case 'savefile':
             try {
