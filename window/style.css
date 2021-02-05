@@ -16,7 +16,7 @@ body{
     width: 100%;
     bottom: 0;
     user-select: none;
-    box-shadow: 0 2px 10px black; /* imo adds a bit of depth? you can remove it if you don't like it */
+    box-shadow: 0 2px 15px black; /* imo adds a bit of depth? you can remove it if you don't like it */
     z-index: 2147483647; /* the drop shadow kinda ruins z-index 0 */
 }
 .closeBtn{
@@ -41,7 +41,7 @@ body{
     color: white;
     border: 1px solid black;
     position: absolute;
-    box-shadow: 2px 2px 10px black;
+    box-shadow: 2px 2px 15px black;
 }
 iframe{
     border: 0;
