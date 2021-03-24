@@ -8,8 +8,9 @@ const userDataPath = (electron.app || electron.remote.app).getPath(
   'userData'
 );
 if (!fs.existsSync(userDataPath + '/fs')) {
-    var zip = new admZip(__dirname.split("window")[0] + "defaultfilesystem.zip");
-    zip.extractAllTo(userDataPath);
+    var zip = new admZip();
+    zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
+    zip.extractAllTo(userDataPath + '/fs');
 }
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/fs/systemdata.json", "utf8"));
 function boot(){
