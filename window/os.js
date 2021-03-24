@@ -8,18 +8,8 @@ const userDataPath = (electron.app || electron.remote.app).getPath(
   'userData'
 );
 if (!fs.existsSync(userDataPath + '/fs')) {
-    target_dir = userDataPath + '/fs';
-    online_location = 'https://raw.githubusercontent.com/yikuansun/TarpOS/main/defaultfilesystem.zip';
-    local_location = fs.createWriteStream(target_dir + ".zip");
-    request = https.get(online_location, function(response) {
-        stream = response.pipe(local_location);
-        stream.on("finish", () => {
-            var zip = new admZip(target_dir + ".zip"); 
-            zip.extractAllTo(userDataPath + '/');
-            fs.unlinkSync(target_dir + ".zip");
-            location.reload();
-        });
-    });
+    var zip = new admZip(__dirname.split("window")[0] + "defaultfilesystem.zip");
+    zip.extractAllTo(userDataPath);
 }
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/fs/systemdata.json", "utf8"));
 function boot(){
