@@ -7,11 +7,14 @@ const electron = require('electron');
 const userDataPath = (electron.app || electron.remote.app).getPath(
   'userData'
 );
+
+// if there is not already an fs directory in the user data path, make one, using defaultfilesystem as a template
 if (!fs.existsSync(userDataPath + '/fs')) {
     var zip = new admZip();
     zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
     zip.extractAllTo(userDataPath + '/fs');
 }
+
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/fs/systemdata.json", "utf8"));
 function boot(){
     prgmZindex = 1;
