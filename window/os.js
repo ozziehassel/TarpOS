@@ -1,10 +1,9 @@
-const { BrowserWindow } = require('electron').remote;
-const { ipcRenderer } = require('electron');
+const { app, ipcRenderer, remote } = require('electron');
+const { BrowserWindow } = remote;
 const fs = require('fs');
 const https = require('https');
 const admZip = require('adm-zip');
-const electron = require('electron');
-const userDataPath = (electron.app || electron.remote.app).getPath(
+const userDataPath = (app || remote.app).getPath(
   'userData'
 );
 
