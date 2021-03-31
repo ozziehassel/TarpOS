@@ -13,7 +13,7 @@ Commands are entered as `COMMANDHERE ARGUMENT1 ARGUMENT2 ARGUMENT3`
 - <b>github install</b> - Downloads an app from a GitHub repository. The GitHub repository can be for a TarpOS app, but some normal non-TarpOS web apps will also work. - `github install USERNAME REPOSITORYNAME BRANCHNAME`
 
 ## Creating a Program
-Creating a TarpOS program is easy. To get started, create a folder in the `/Programs/` directory. Make sure to name your folder after the program. Next, add/create the following files in your new folder.
+Creating a TarpOS program is easy. Access the TarpOS filesystem on your parent machine by navigating to your computer's documents folder and finding the folder within it called `TarpOS_files`. To get started, create a folder in the `/Programs/` directory. Make sure to name your folder after the program. Next, add/create the following files in your new folder.
 - `index.html` - What will display when a user opens your program.
 - `app.js` - You can really name this JS file whatever you want, but it's sort of a convention to use `app.js`.
 - `icon.png` - This is the icon TarpOS will use when listing your program.  <br><br>
