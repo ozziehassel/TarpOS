@@ -60,6 +60,24 @@ function openPrgm(name, queryobj){
     close.addEventListener('click',
         new Function('closePrgm(' + processId.toString() + ')')
     );
+    var fullScreen = document.createElement('button');
+    fullScreen.className = 'fullscreenBtn';
+    fullScreen.innerText = '□';
+    titleBar.appendChild(fullScreen);
+    fullScreen.addEventListener('click',
+        new Function(`
+        if (document.getElementById("` + processId.toString() + `").style.width == "100vw") {
+            document.getElementById("` + processId.toString() + `").style.width = sys.settings.defaultWindowWidth + 'vw';
+            document.getElementById("` + processId.toString() + `").style.height = sys.settings.defaultWindowHeight + 'vh';
+        }
+        else {
+            document.getElementById("` + processId.toString() + `").style.top = "0";
+            document.getElementById("` + processId.toString() + `").style.left = "0";
+            document.getElementById("` + processId.toString() + `").style.width = "100vw";
+            document.getElementById("` + processId.toString() + `").style.height = "93vh";
+        }
+        `)
+    );
     var frame = document.createElement('iframe');
     frame.id = name+'_frame';
     frame.style.width = '100%';
