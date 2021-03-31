@@ -45,21 +45,26 @@ function openPrgm(name, queryobj){
     window.className = 'win';
     window.style.height = sys.settings.defaultWindowHeight + 'vh';
     window.style.width = sys.settings.defaultWindowWidth + 'vw';
+    window.style.display = 'flex';
+    window.style.flexFlow = 'column';
+    var titleBar = document.createElement('div');
+    titleBar.style.width = '100%';
+    titleBar.style.height = '3vh';
+    titleBar.style.minHeight = '3vh'; // prevent shrinking when window really small
+    window.appendChild(titleBar);
     var close = document.createElement('button');
-    window.innerHTML = '<span style="font-weight: bold; padding-left: 6px; line-height: 3vh;">'+name+'</span>';
+    titleBar.innerHTML = '<span style="font-weight: bold; padding-left: 6px; line-height: 3vh;">'+name+'</span>';
     close.className = 'closeBtn';
     close.innerHTML = 'X';
-    window.appendChild(close);
+    titleBar.appendChild(close);
     close.addEventListener('click',
         new Function('closePrgm(' + processId.toString() + ')')
     );
     var frame = document.createElement('iframe');
     frame.id = name+'_frame';
-    frame.style.width = sys.settings.defaultWindowWidth + 'vw';
-    frame.style.height = (sys.settings.defaultWindowHeight - 3) + 'vh';
-    frame.style.position = 'absolute';
-    frame.style.right = '0';
-    frame.style.bottom = '0';
+    frame.style.width = '100%';
+    frame.style.minHeight = '0';
+    frame.style.flex = '1 1 auto';
     frame.style.backgroundColor = "#FFFFFF";
     frame.src = userDataPath + '/TarpOS_files/Programs/'+name+'/index.html';
     querystring = '?processId=' + processId.toString();
