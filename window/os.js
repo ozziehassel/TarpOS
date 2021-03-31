@@ -193,4 +193,14 @@ window.addEventListener('message', function(event) {
             break;
     }
 });
+// REGISTER KEYBOARD SHORTCUTS
+window.addEventListener("keydown", function(e) {
+    if (e.key == "3" && e.ctrlKey && e.shiftKey) {
+        var current_window = BrowserWindow.getAllWindows()[0];
+        current_window.webContents.capturePage().then((img) => {
+            fs.writeFileSync(userDataPath + "/TarpOS_files/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
+            // Probably alert user or make sfx or something
+        });
+    }
+});
 boot();
