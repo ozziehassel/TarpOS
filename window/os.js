@@ -107,6 +107,7 @@ function openPrgm(name, queryobj){
         containment: "parent"
     });
     
+    // add preload script to the head of the iframe document
     var frameDoc = frame.contentDocument;
     var preload = frameDoc.createElement("script");
     preload.append(fs.readFileSync(__dirname + "/global_app_preload.js", "utf-8"));
