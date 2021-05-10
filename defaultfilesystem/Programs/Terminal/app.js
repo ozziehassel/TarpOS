@@ -13,9 +13,12 @@ function typeBox() {
         if (event.key == "Enter") {
             if (!this.innerText.replace(/\s/g, '').length) { typeBox(); }
             else {
-                window.parent.postMessage({
+                raw_tarp_cmd({
                     name: parse_cmdline(this.innerText)[0],
                     args: parse_cmdline(this.innerText).splice(1, parse_cmdline(this.innerText).length - 1)
+                }).then(function(recieved) {
+                    document.getElementById("terminalpre").innerText += "\n" + ((typeof(recieved) == "string")?recieved:JSON.stringify(recieved));
+                    typeBox();
                 });
             }
             return false;
@@ -23,7 +26,3 @@ function typeBox() {
     }
 }
 setTimeout(typeBox, 2000);
-window.addEventListener("message", function(event) {
-    document.getElementById("terminalpre").innerText += "\n" + ((typeof(event.data) == "string")?event.data:JSON.stringify(event.data));
-    typeBox();
-});

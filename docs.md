@@ -18,4 +18,4 @@ Creating a TarpOS program is easy. Access the TarpOS filesystem on your parent m
 - `app.js` - You can really name this JS file whatever you want, but it's sort of a convention to use `app.js`.
 - `icon.png` - This is the icon TarpOS will use when listing your program.  <br><br>
 Then, attach `app.js` to your `index.html` file. From there, your program behaves as a normal HTML webpage would. 
-To use TarpOSBASIC commands in your app, use `window.parent.postMessage({ name: "COMMANDNAME", args: [ARGUMENT1, ARGUMENT2, ARGUMENT2] });`. To receive data from the system process, use `window.addEventListener("message", (event) => {})`. The `event` variable contains any return data that the system process sends back.
+To use TarpOSBASIC commands in your app, use `tarpcommands.COMMANDNAME` as an asynchronous function, for example `tarpcommands.readfile("Documents/hey.txt", "utf-8", "r").then((data) => console.log(data));`. The resolve (in our example, `data`) of the asynchronous function contains any return data that the system process sends back.

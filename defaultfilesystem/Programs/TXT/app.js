@@ -6,8 +6,5 @@ function readTextArea(){
     else{
         var name = document.getElementById('filename').value;
     }
-    window.parent.postMessage({
-        name: "savefile",
-        args: [name, "Documents", "txt", text]
-    });
+    tarpcommands.savefile(name, "Documents", "txt", text).then();
 }

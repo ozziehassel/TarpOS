@@ -107,6 +107,12 @@ function openPrgm(name, queryobj){
         containment: "parent"
     });
     
+    // add preload script to the head of the iframe document
+    var frameDoc = frame.contentDocument;
+    var preload = frameDoc.createElement("script");
+    preload.append(fs.readFileSync(__dirname + "/global_app_preload.js", "utf-8"));
+    frameDoc.head.appendChild(preload);
+    
     // move dragged window to front
     prgmZindex++;
     window.style.zIndex = prgmZindex;
@@ -182,9 +188,10 @@ window.addEventListener('message', function(event) {
             sys.settings.defaultWindowWidth = command.args[0];
             sys.settings.defaultWindowHeight = command.args[1];
             sys.globalFont = command.args[2];
-            sys.processes = {};
-            fs.writeFileSync(userDataPath + '/TarpOS_files/systemdata.json', JSON.stringify(sys));
-            window.postMessage({name: 'requestrestart', args: []});
+            document.body.style.fontFamily = sys.globalFont;
+            var sys_clone = JSON.parse(JSON.stringify(sys));
+            sys_clone.processes = {};
+            fs.writeFileSync(userDataPath + '/TarpOS_files/systemdata.json', JSON.stringify(sys_clone));
             break;
         case 'github':
             if (command.args[0] == 'install') {
