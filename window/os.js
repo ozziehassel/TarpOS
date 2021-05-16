@@ -7,9 +7,13 @@ const userDataPath = (app || remote.app).getPath('documents');
 
 // if there is not already an TarpOS_files directory in the user data path, make one, using defaultfilesystem as a template
 if (!fs.existsSync(userDataPath + '/TarpOS_files')) {
+    fs.mkdirSync(userDataPath + '/TarpOS_files');
+    fs.writeFileSync(userDataPath + '/TarpOS_files/systemdata.json', JSON.stringify(
+        {"processes":{},"globalFont":"verdana","availFonts":["arial","helvetica","verdana","courier new","garamond"],"taskbar":["Files","TXT","Settings","Terminal","ZOOM"],"desktop":[],"settings":{"defaultWindowHeight":60,"defaultWindowWidth":50}}
+    ));
     var zip = new admZip();
     zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
-    zip.extractAllTo(userDataPath + '/TarpOS_files');
+    zip.extractAllTo(userDataPath + '/TarpOS_files/fs');
 }
 
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/TarpOS_files/systemdata.json", "utf8"));
@@ -22,7 +26,7 @@ function boot(){
         pinIcon.style = 'height: 5vh; width: 5vh; margin: 1vh;';
         pinIcon.setAttribute('draggable', false);
         pinIcon.setAttribute('onclick', 'openPrgm("'+sys.taskbar[i]+'")');
-        pinIcon.src = userDataPath + '/TarpOS_files/Programs/'+sys.taskbar[i]+'/icon.png';
+        pinIcon.src = userDataPath + '/TarpOS_files/fs/Programs/'+sys.taskbar[i]+'/icon.png';
         document.getElementById('taskbar').appendChild(pinIcon);
     }
     document.body.style.fontFamily = sys.globalFont;
@@ -84,7 +88,7 @@ function openPrgm(name, queryobj){
     frame.style.minHeight = '0';
     frame.style.flex = '1 1 auto';
     frame.style.backgroundColor = "#FFFFFF";
-    frame.src = userDataPath + '/TarpOS_files/Programs/'+name+'/index.html';
+    frame.src = userDataPath + '/TarpOS_files/fs/Programs/'+name+'/index.html';
     querystring = '?processId=' + processId.toString();
 
     // queryobj is an optional parameter that passes data into the app on opening via the frame URL's querystring. This way, for example, if you double-click a text file in the files program, you can have it open automatically in the txt program
@@ -133,7 +137,7 @@ function closePrgm(id){
     setTimeout(function(win_to_remove) { win_to_remove.remove(); }, closeFXlen, selected_window);
 }
 function saveFile(name, dir, type, data){
-    fs.writeFileSync(userDataPath+'/TarpOS_files/'+dir+'/'+name+'.'+type, data, (err) => {
+    fs.writeFileSync(userDataPath+'/TarpOS_files/fs/'+dir+'/'+name+'.'+type, data, (err) => {
         if(err) throw err;
     })
 }
@@ -153,7 +157,7 @@ window.addEventListener('message', function(event) {
             break;
         case 'dir':
             try {
-                directory_contents = fs.readdirSync(userDataPath+'/TarpOS_files/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
+                directory_contents = fs.readdirSync(userDataPath+'/TarpOS_files/fs/'+command.args[0]); // readdirSync allows for better error handling, but it returns data instead of having callback
                 appWindow.postMessage(directory_contents);
             } 
             catch(err) { appWindow.postMessage(err.message); }
@@ -174,7 +178,7 @@ window.addEventListener('message', function(event) {
         case 'readfile':
             try {
                 // file, encoding, flag (ex.: readfile documents/hey.txt utf-8 r)
-                file_contents = fs.readFileSync(userDataPath+'/TarpOS_files/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
+                file_contents = fs.readFileSync(userDataPath+'/TarpOS_files/fs/'+command.args[0], {encoding: command.args[1], flag: command.args[2]});
                 appWindow.postMessage(file_contents);
             }
             catch(err) { appWindow.postMessage(err.message); }
@@ -196,14 +200,14 @@ window.addEventListener('message', function(event) {
         case 'github':
             if (command.args[0] == 'install') {
                 try {
-                    target_dir = userDataPath + "/TarpOS_files/Programs/" + command.args[2];
+                    target_dir = userDataPath + "/TarpOS_files/fs/Programs/" + command.args[2];
                     online_location = "https://codeload.github.com/" + command.args[1] + "/" + command.args[2] + "/zip/" + command.args[3];
                     local_location = fs.createWriteStream(target_dir + ".zip");
                     request = https.get(online_location, function(response) {
                         stream = response.pipe(local_location);
                         stream.on("finish", () => {
                             var zip = new admZip(target_dir + ".zip"); 
-                            zip.extractAllTo(userDataPath + "/TarpOS_files/Programs/");
+                            zip.extractAllTo(userDataPath + "/TarpOS_files/fs/Programs/");
                             fs.renameSync(target_dir + "-" + command.args[3], target_dir)
                             appWindow.postMessage("Success in installing program. Use 'run " + command.args[2] + "' to run program.");
                             fs.unlinkSync(target_dir + ".zip");
@@ -228,7 +232,7 @@ window.addEventListener("keydown", function(e) {
     if (e.key == "3" && e.ctrlKey && e.shiftKey) {
         var current_window = BrowserWindow.getAllWindows()[0];
         current_window.webContents.capturePage().then((img) => {
-            fs.writeFileSync(userDataPath + "/TarpOS_files/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
+            fs.writeFileSync(userDataPath + "/TarpOS_files/fs/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
             // Probably alert user or make sfx or something
         });
     }
