@@ -18,3 +18,8 @@ for (var cmd of avail_commands) {
 }
 })
 (["savefile", "fetchsystemdata", "dir", "run", "readfile", "requestrestart", "setsettings", "github"]);
+
+var getProcessId = function() {
+    var queryobj = new URLSearchParams(location.search);
+    return queryobj.get("processId");
+};
