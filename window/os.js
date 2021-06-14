@@ -250,7 +250,7 @@ Menu.setApplicationMenu(Menu.buildFromTemplate([{
                 var current_window = BrowserWindow.getFocusedWindow();
                 current_window.webContents.capturePage().then((img) => {
                     fs.writeFileSync(userDataPath + "/TarpOS_files/fs/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
-                    // Probably alert user or make sfx or something
+                    document.body.style.animation = "whiteflash 1s";
                 });
             }
         }
