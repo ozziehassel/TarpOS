@@ -72,6 +72,6 @@ iframe{
     to { transform: scale(1); opacity: 1; }
 }
 @keyframes whiteflash {
-    from { filter: brightness(5); }
-    to { filter: brightness(1); }
+    from { filter: opacity(0); }
+    to { filter: opacity(1); }
 }
