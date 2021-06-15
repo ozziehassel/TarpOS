@@ -235,14 +235,9 @@ Menu.setApplicationMenu(Menu.buildFromTemplate([{
         { role: "paste" },
         { role: "cut" },
         { role: "pasteAndMatchStyle" },
-        { role: "delete" },
         { role: "selectAll" },
         { role: "undo" },
         { role: "redo" },
-        { type: "separator" },
-        { role: "forceReload" },
-        { role: "toggleDevTools" },
-        { type: "separator" },
         {
             label: "Screenshot",
             accelerator: "Shift+Ctrl+3",
@@ -254,6 +249,12 @@ Menu.setApplicationMenu(Menu.buildFromTemplate([{
                 });
             }
         }
+    ]
+}, {
+    label: "Emulator",
+    submenu: [
+        { role: "quit" },
+        { role: "togglefullscreen" },
     ]
 }]));
 boot();

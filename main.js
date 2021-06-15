@@ -18,6 +18,7 @@ function createWindow () {
   })
   mainWindow.loadFile('window/index.html');
   mainWindow.maximize();
+  mainWindow.setFullScreen(true);
 }
 
 app.whenReady().then(() => {
