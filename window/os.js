@@ -254,6 +254,7 @@ Menu.setApplicationMenu(Menu.buildFromTemplate([{
     label: "Emulator",
     submenu: [
         { role: "quit" },
+        { role: "toggleDevTools" },
         { role: "togglefullscreen" },
     ]
 }]));
