@@ -1,5 +1,6 @@
 {
   "name": "tarpos",
+  "productName": "TarpOS",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
