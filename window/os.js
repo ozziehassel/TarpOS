@@ -1,5 +1,5 @@
 const { app, ipcRenderer, remote } = require('electron');
-const { BrowserWindow } = remote;
+const { BrowserWindow, Menu } = remote;
 const fs = require('fs');
 const https = require('https');
 const admZip = require('adm-zip');
@@ -228,13 +228,34 @@ window.addEventListener('message', function(event) {
     }
 });
 // REGISTER KEYBOARD SHORTCUTS
-window.addEventListener("keydown", function(e) {
-    if (e.key == "3" && e.ctrlKey && e.shiftKey) {
-        var current_window = BrowserWindow.getAllWindows()[0];
-        current_window.webContents.capturePage().then((img) => {
-            fs.writeFileSync(userDataPath + "/TarpOS_files/fs/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
-            // Probably alert user or make sfx or something
-        });
-    }
-});
+Menu.setApplicationMenu(Menu.buildFromTemplate([{
+    label: "Keyboard Shortcuts",
+    submenu: [
+        { role: "copy" },
+        { role: "paste" },
+        { role: "cut" },
+        { role: "pasteAndMatchStyle" },
+        { role: "selectAll" },
+        { role: "undo" },
+        { role: "redo" },
+        {
+            label: "Screenshot",
+            accelerator: "Shift+Ctrl+3",
+            click() {
+                var current_window = BrowserWindow.getFocusedWindow();
+                current_window.webContents.capturePage().then((img) => {
+                    fs.writeFileSync(userDataPath + "/TarpOS_files/fs/Documents/Screenshot from " + (new Date()).toString().replaceAll(":", ".") + ".png", img.toPNG());
+                    document.body.style.animation = "whiteflash 1s";
+                });
+            }
+        }
+    ]
+}, {
+    label: "Emulator",
+    submenu: [
+        { role: "quit" },
+        { role: "toggleDevTools" },
+        { role: "togglefullscreen" },
+    ]
+}]));
 boot();

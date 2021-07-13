@@ -71,3 +71,7 @@ iframe{
     from { transform: scale(0.5); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+@keyframes whiteflash {
+    from { filter: opacity(0); }
+    to { filter: opacity(1); }
+}
