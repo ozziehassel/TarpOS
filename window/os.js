@@ -123,7 +123,7 @@ function openPrgm(name, queryobj){
     });
     $(window).resizable({
         containment: "parent",
-        handles: "n, e, s, w",
+        handles: 'nw, ne, sw, se, n, e, s, w',
         start() {
             $(".win").each(function (index, element) {
                 var d = $(`<div class="iframeCover" style="zindex:${prgmZindex + 10};position:absolute;width:100%;top:0px;left:0px;height:${$(element).height()}px"></div>`);
