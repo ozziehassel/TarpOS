@@ -17,6 +17,8 @@ if (!fs.existsSync(userDataPath + '/TarpOS_files')) {
 }
 
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/TarpOS_files/systemdata.json", "utf8"));
+var prgmZindex;
+var processId;
 function boot(){
     prgmZindex = 1;
     processId = 0;
