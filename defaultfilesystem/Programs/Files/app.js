@@ -24,6 +24,8 @@ for (var branch of branches) {
         li.addEventListener("click", function() {
             location.replace(`?processId=${getProcessId()}&path=${encodeURIComponent(directory + "/" + this)}`);
         }.bind(branch));
+        
+        li.style.listStyleImage = "url('icons/folder.svg')";
     }
     else {
         // branch is a file
@@ -32,6 +34,14 @@ for (var branch of branches) {
                 path: directory + "/" + this
             }));
         }.bind(branch));
+
+        var extension = branch.split(".").pop();
+        li.style.listStyleImage = {
+            txt: "url('icons/text.svg')",
+            html: "url('icons/text.svg')",
+            png: "url('icons/image.svg')",
+            jpg: "url('icons/image.svg')",
+        }[extension];
     }
 }
 
