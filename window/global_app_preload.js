@@ -14,7 +14,7 @@ var raw_tarp_cmd = async function(command) {
 var tarpcommands = {};
 (function(avail_commands) { // wrapped in function to prevent global vars
 for (var cmd of avail_commands) {
-    tarpcommands[cmd] = new Function(`return raw_tarp_cmd({name:"${cmd}",args:JSON.parse(JSON.stringify(arguments))});`);
+    tarpcommands[cmd] = new Function(`return raw_tarp_cmd({name:"${cmd}",args:JSON.parse(JSON.stringify(Array.from(arguments)))});`);
 }
 })
 (["savefile", "fetchsystemdata", "dir", "run", "readfile", "requestrestart", "setsettings", "github"]);
