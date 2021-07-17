@@ -110,6 +110,10 @@ function openPrgm(name, queryobj){
     $(window).draggable({
         containment: "parent"
     });
+    $(window).resizable({
+        containment: "parent",
+        handles: "n, e, s, w"
+    });
     
     // add preload script to the head of the iframe document
     var frameDoc = frame.contentDocument;
