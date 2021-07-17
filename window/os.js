@@ -134,6 +134,7 @@ function openPrgm(name, queryobj){
             $('.iframeCover').remove();
         }
     });
+    window.style.position = "absolute";
     
     // add preload script to the head of the iframe document
     var frameDoc = frame.contentDocument;
