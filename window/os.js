@@ -132,6 +132,13 @@ function openPrgm(name, queryobj){
         },
     });
     window.style.position = "absolute";
+
+    $("ui-resizable-handle").mousedown(function() {
+        $('iframe').css('pointer-events', 'auto');
+    });
+    $("ui-resizable-handle").mouseup(function() {
+        $('iframe').css('pointer-events', 'auto');
+    });
     
     // add preload script to the head of the iframe document
     var frameDoc = frame.contentDocument;
