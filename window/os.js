@@ -11,10 +11,10 @@ if (!fs.existsSync(userDataPath + '/TarpOS_files')) {
     fs.writeFileSync(userDataPath + '/TarpOS_files/systemdata.json', JSON.stringify(
         {"processes":{},"globalFont":"verdana","availFonts":["arial","helvetica","verdana","courier new","garamond"],"taskbar":["Files","TXT","Settings","Terminal","ZOOM"],"desktop":[],"settings":{"defaultWindowHeight":60,"defaultWindowWidth":50}}
     ));
-    var zip = new admZip();
-    zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
-    zip.extractAllTo(userDataPath + '/TarpOS_files/fs');
 }
+var zip = new admZip();
+zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
+zip.extractAllTo(userDataPath + '/TarpOS_files/fs', true);
 
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/TarpOS_files/systemdata.json", "utf8"));
 var prgmZindex;
