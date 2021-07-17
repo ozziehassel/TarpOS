@@ -112,7 +112,16 @@ function openPrgm(name, queryobj){
     });
     $(window).resizable({
         containment: "parent",
-        handles: "n, e, s, w"
+        handles: "n, e, s, w",
+        start() {
+            $(".win").each(function (index, element) {
+                var d = $(`<div class="iframeCover" style="zindex:${prgmZindex + 10};position:absolute;width:100%;top:0px;left:0px;height:${$(element).height()}px"></div>`);
+                $(element).append(d);
+            });
+        },
+        stop() {
+            $('.iframeCover').remove();
+        }
     });
     
     // add preload script to the head of the iframe document
