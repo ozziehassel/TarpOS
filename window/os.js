@@ -125,14 +125,11 @@ function openPrgm(name, queryobj){
         containment: "parent",
         handles: 'nw, ne, sw, se, n, e, s, w',
         start() {
-            $(".win").each(function (index, element) {
-                var d = $(`<div class="iframeCover" style="zindex:${prgmZindex + 10};position:absolute;width:100%;top:0px;left:0px;height:${$(element).height()}px"></div>`);
-                $(element).append(d);
-            });
+            $('iframe').css('pointer-events', 'none');
         },
-        stop() {
-            $('.iframeCover').remove();
-        }
+        stop: function(event, ui) {
+            $('iframe').css('pointer-events', 'auto');
+        },
     });
     window.style.position = "absolute";
     
