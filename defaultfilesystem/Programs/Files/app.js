@@ -6,7 +6,7 @@ document.body.style.fontFamily = settings.globalFont;
 var pageURL = new URL(location.href);
 var directory = pageURL.searchParams.get("path");
 if (!directory) {
-    directory = "";
+    directory = ".";
 }
 
 document.querySelector("pre").innerText = directory;
