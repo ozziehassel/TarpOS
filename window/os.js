@@ -110,7 +110,16 @@ function openPrgm(name, queryobj){
     window.style.animation = 'fadeZoomIn 150ms';
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
-        containment: "parent"
+        containment: "parent",
+        start() {
+            $(".win").each(function (index, element) {
+                var d = $(`<div class="iframeCover" style="zindex:${prgmZindex + 10};position:absolute;width:100%;top:0px;left:0px;height:${$(element).height()}px"></div>`);
+                $(element).append(d);
+            });
+        },
+        stop() {
+            $('.iframeCover').remove();
+        }
     });
     $(window).resizable({
         containment: "parent",
