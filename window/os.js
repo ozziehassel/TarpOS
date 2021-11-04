@@ -11,12 +11,14 @@ if (!fs.existsSync(userDataPath + '/TarpOS_files')) {
     fs.writeFileSync(userDataPath + '/TarpOS_files/systemdata.json', JSON.stringify(
         {"processes":{},"globalFont":"verdana","availFonts":["arial","helvetica","verdana","courier new","garamond"],"taskbar":["Files","TXT","Settings","Terminal","ZOOM"],"desktop":[],"settings":{"defaultWindowHeight":60,"defaultWindowWidth":50}}
     ));
-    var zip = new admZip();
-    zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
-    zip.extractAllTo(userDataPath + '/TarpOS_files/fs');
 }
+var zip = new admZip();
+zip.addLocalFolder(__dirname.split("window")[0] + "defaultfilesystem");
+zip.extractAllTo(userDataPath + '/TarpOS_files/fs', true);
 
 var sys = JSON.parse(fs.readFileSync(userDataPath + "/TarpOS_files/systemdata.json", "utf8"));
+var prgmZindex;
+var processId;
 function boot(){
     prgmZindex = 1;
     processId = 0;
@@ -108,7 +110,34 @@ function openPrgm(name, queryobj){
     window.style.animation = 'fadeZoomIn 150ms';
     document.getElementById('desktop').appendChild(window);
     $(window).draggable({
-        containment: "parent"
+        containment: "parent",
+        start() {
+            $(".win").each(function (index, element) {
+                var d = $(`<div class="iframeCover" style="zindex:${prgmZindex + 10};position:absolute;width:100%;top:0px;left:0px;height:${$(element).height()}px"></div>`);
+                $(element).append(d);
+            });
+        },
+        stop() {
+            $('.iframeCover').remove();
+        }
+    });
+    $(window).resizable({
+        containment: "parent",
+        handles: 'nw, ne, sw, se, n, e, s, w',
+        start() {
+            $('iframe').css('pointer-events', 'none');
+        },
+        stop: function(event, ui) {
+            $('iframe').css('pointer-events', 'auto');
+        },
+    });
+    window.style.position = "absolute";
+
+    $("ui-resizable-handle").mousedown(function() {
+        $('iframe').css('pointer-events', 'auto');
+    });
+    $("ui-resizable-handle").mouseup(function() {
+        $('iframe').css('pointer-events', 'auto');
     });
     
     // add preload script to the head of the iframe document
